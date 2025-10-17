@@ -3,6 +3,8 @@
 
 Licensing info can be found at `LICENSING.txt`. Source code can be found at `/code`.
 
+To use BFASM, download and build the source code, then run the `.exe` file with the first argument being the file you want to compile.
+
 # Statements
 Commands in BFASM are called *statements*. The table of statements and their functions are listed below.
 
