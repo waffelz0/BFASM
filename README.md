@@ -1,7 +1,7 @@
 # BFASM
 *BFASM* is a compiled, semi-high-level programming language that compiles directly to raw, functioning brainfuck. It has support for variables, arithmetic, I/O, comparison, and simple control flow. It gets its name from its assembly-like syntax. It is currently in version *v0.0*.
 
-Licensing info can be found at `LICENSING.txt`. Source code can be found at `.../code`.
+Licensing info can be found at `LICENSING.txt`. Source code can be found at `/code`.
 
 # Statements
 Commands in BFASM are called *statements*. The table of statements and their functions are listed below.
@@ -14,7 +14,7 @@ Command | Function | Version added
 `mul %x %y %z` | Compute `%x * %y` and store it in `%z`. | v0.0
 `div %x %y %z` | Compute `%x / %y` and store it in `%z`, rounding down if necessary. | v0.0
 `out %x` | Output the ASCII character stored in `%x`. | v0.0
-`inp %x` | Input an ASCII character store it in `%x`. | v0.0
+`inp %x` | Input an ASCII character and store it in `%x`. | v0.0
 `cmp %x %y %z %w %v` | Compare `%x` to `%y`. If `%x = %y`, set `%z` to `1`. If `%x > %y`, set `%w` to `1`. If `%x < %y`, set `%v` to `1`. All other arguments are set to zero. | v0.0
 `begin_if %x` | If `%x` is nonzero, execute the code until the matching end_if (see next row) once, else skip it. | v0.0
 `end_if` | Close the matching `begin_if`. | v0.0
