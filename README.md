@@ -8,9 +8,9 @@ To use BFASM, download and build the source code, then run the `.exe` file with 
 # Statements
 Commands in BFASM are called *statements*. The table of statements and their functions are listed below.
 
-Command | Function | Version added
+Statement | Function | Version added
 :-- | :-- | :--
-`set %x v` | Set the variable `%x` to the value provided. Variable names must start with `%`. This is currently the only command that takes a number literal as an argument. | v0.0
+`set %x v` | Set the variable `%x` to the value provided. Variable names must start with `%`. This is currently the only statement that takes a number literal as an argument. | v0.0
 `add %x %y %z` | Compute `%x + %y` and store it in `%z`. | v0.0
 `sub %x %y %z` | Compute `%x - %y` and store it in `%z`. | v0.0
 `mul %x %y %z` | Compute `%x * %y` and store it in `%z`. | v0.0
@@ -25,7 +25,7 @@ Command | Function | Version added
 
 # Brainfuck Equivalence
 Pointer movement is handled by the compiler, and is handled differently for every program. Because of this, *exact* equivalences cannot be given, so only the computation code will be provided instead, leaving pointer arithmetic out.
-Command | Function
+Statement | Function
 :-- | :--
 `set %x v` | `+++...`
 `add %x %y %z` | `[-<+>]`
