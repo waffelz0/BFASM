@@ -38,22 +38,29 @@ void var_check(str var, int line) {
         std::cerr << "Variables must start with '%' (found '" << var << "' on line " << line << ")\n";
         std::exit(1);
     }
+    if (var == "%_") {
+        std::cerr << "'%_' is a reserved name (line " << line << ")\n";
+        std::exit(1);
+    }
 }
 
 void num_check(str string, int line) {
     if (!is_number(string)) {
-        std::cerr << "Expected number, got '" << string << "' on line " << line << "\n";
+        std::cerr << "Expected integer, got '" << string << "' on line " << line << "\n";
         std::exit(1);
     }
 }
 
 void parse_line(str &line, int n) {
+    auto cmt_idx = std::find(line.begin(), line.end(), '!');
+    if (cmt_idx != line.end()) {
+        line = line.substr(0, cmt_idx - line.begin());
+    }
     vect<str> tokens;
     line = trim(line);
     std::istringstream ss(line);
     str token;
     while (std::getline(ss, token, ' ')) {
-        //std::cout << "   ->" << token << "\n";
         tokens.push_back(token);
     }
     if (!tokens.empty()) {
@@ -62,10 +69,15 @@ void parse_line(str &line, int n) {
             var_check(tokens[1], n);
             num_check(tokens[2], n);
             if (variables.size() > 10000) {
-                std::cerr << "Too many variables (max 10,000)! Line " << line << "\n";
+                std::cerr << "Too many variables (max 10,000, line " << n << ")\n";
                 std::exit(1);
             }
-            set(tokens[1].substr(1), std::stod(tokens[2]));
+            int val = std::stoi(tokens[2]);
+            if (val > 255 || val < 0) {
+                std::cerr << "Value given to 'set' command must be between 0 and 255 (found " << tokens[2] << ", line " << n << ")\n";
+                std::exit(1);
+            }
+            set(tokens[1].substr(1), val);
         } else if (tokens[0] == "add") {
             size_check(tokens.size(), 4, n);
             var_check(tokens[1], n);
@@ -90,6 +102,12 @@ void parse_line(str &line, int n) {
             var_check(tokens[2], n);
             var_check(tokens[3], n);
             div(tokens[1].substr(1), tokens[2].substr(1), tokens[3].substr(1));
+        } else if (tokens[0] == "mod") {
+            size_check(tokens.size(), 4, n);
+            var_check(tokens[1], n);
+            var_check(tokens[2], n);
+            var_check(tokens[3], n);
+            mod(tokens[1].substr(1), tokens[2].substr(1), tokens[3].substr(1));
         } else if (tokens[0] == "out") {
             size_check(tokens.size(), 2, n);
             var_check(tokens[1], n);
@@ -106,21 +124,28 @@ void parse_line(str &line, int n) {
             var_check(tokens[4], n);
             var_check(tokens[5], n);
             cmp(tokens[1].substr(1), tokens[2].substr(1), tokens[3].substr(1), tokens[4].substr(1), tokens[5].substr(1));
-        } else if (tokens[0] == "begin_if") {
+        } else if (tokens[0] == "if") {
             size_check(tokens.size(), 2, n);
             var_check(tokens[1], n);
-            begin_if(tokens[1].substr(1));
-        } else if (tokens[0] == "end_if") {
+            bif(tokens[1].substr(1), n);
+        } else if (tokens[0] == "while") {
+            size_check(tokens.size(), 2, n);
+            var_check(tokens[1], n);
+            bwhile(tokens[1].substr(1), n);
+        } else if (tokens[0] == "end") {
             size_check(tokens.size(), 1, n);
-            end_if();
-        } else if (tokens[0] == "begin_while") {
-            size_check(tokens.size(), 2, n);
-            var_check(tokens[1], n);
-            begin_while(tokens[1].substr(1));
-        } else if (tokens[0] == "end_while") {
-            size_check(tokens.size(), 2, n);
-            var_check(tokens[1], n);
-            end_while(tokens[1].substr(1));
+            if (callstack.empty()) {
+                std::cerr << "Found 'end' statement with no matching 'if'/'while' statement (line " << n << ")\n";
+                std::exit(1);
+            }
+            if (callstack.top().type == BlockType::IF) {
+                end_if();
+            } else {
+                end_while();
+            }
+        } else {
+            std::cerr << "Unknown statement '" << tokens[0] << "' on line " << n << "\n";
+            std::exit(1);
         }
     }
 }
@@ -139,6 +164,8 @@ int main(int argc, char* argv[]) {
         std::exit(1);
     }
 
+    set("_", 0);
+
     str line;
     while (std::getline(file, line)) {
         number++;
@@ -147,9 +174,16 @@ int main(int argc, char* argv[]) {
 
     file.close();
 
+    if (!callstack.empty()) {
+        std::cerr << "Found 'if'/'while' statement with no matching 'end' statement (line " << callstack.top().line << ")\n";
+        std::exit(1);
+    }
+
     str filename = argv[1] + (str)".bf";
     std::ofstream f(filename);
     f << brainfuck;
+
+    std::cout << "Program compiled successfully.\n";
 
     return 0;
 }
