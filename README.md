@@ -29,7 +29,7 @@ Statement | Function | Version added
 # Removed Statements
 The table of statements that have been removed in earlier versions are listed below.
 
-Statement | Reason | Version Removed
+Statement | Reason for Removal | Version Removed
 :-- | :-- | :--
 `begin_if %x` | Replaced with `if`. | v0.1
 `end_if` | Unified with `end_while` as `end`. | v0.1
@@ -55,7 +55,7 @@ Statement | Function
 `end` | `]`
 
 # Examples
-The following programs were compiled using BFASM. Each row of brainfuck code is 100 characters.
+The following programs were compiled using BFASM. Brainfuck code is split by 100 instructions.
 
 ## Print "Hello, World!"
 ```
@@ -211,17 +211,23 @@ The tape structure for a compiled BFASM program is similar to the diagram below.
  —^— —————————————^————————————— —————————————^—————————————
  [0] [_] [_] [_] [_] [_] ... [_] [0] [0] [0] [0] [0] [0] ...
 ```
-Statements copy their operands to the first free cells (those in the second half of the tape), perform the operation, and move the result to the desired cell.
+Statements copy their operands to the first free cells (those in the second half of the tape), perform the operation, and move the result to the desired cell. Because of this, the majority of most generated programs are pointer arithmetic (`<` and `>`).
 
 # Changelog
 
 ## v0.1
-\- Added `mod` statement
-\- Unified `end_if` and `end_while` as `end`
-\- Renamed `begin_if` and `begin_while` to `if` and `while` respectively
-\- Fixed a giant pointer arithmetic issue in `if` statements
-\- Added comments with `! ...`
-\- Vastly improved error checking
+- Added `mod` statement  
+- Unified `end_if` and `end_while` as `end`  
+- Renamed `begin_if` and `begin_while` to `if` and `while` respectively  
+- Fixed a giant pointer arithmetic issue in `if` statements  
+- Added comments with `! ...`  
+- Vastly improved error checking
 
 ## v0.0
-\- Initial release
+- Initial release
+
+# Known Issues
+- Defining a variable inside an if statement(?) or a while loop messes up the internal pointer, which can completely mess up brainfuck logic.  
+- Programs are limited to brainfuck's 8-bit cell size. Operations will silently overflow.
+
+
