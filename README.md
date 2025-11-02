@@ -39,11 +39,11 @@ Statement | Reason for Removal | Version Removed
 # Brainfuck Equivalence
 *Actual compiled code will contain many pointer adjustments that differ for every program.*
 
-Statement | Function
+Statement | Brainfuck Equivalence
 :-- | :--
 `set %x v` | `+++...`
 `add %x %y %z` | `[-<+>]`
-`sub %x %y %z` | `[-<+>]`
+`sub %x %y %z` | `[-<->]`
 `mul %x %y %z` | `[>[->+>+<<]>>[<<+>>-]<<<-]>[-]<`
 `div %x %y %z` | `[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>[-]>[-]>[-]`
 `mod %x %y %z` | `[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>[-]>[-]>>[-]<`
