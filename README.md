@@ -213,6 +213,8 @@ The tape structure for a compiled BFASM program is similar to the diagram below.
 ```
 Statements copy their operands to the first free cells (those in the second half of the tape), perform the operation, and move the result to the desired cell. Because of this, the majority of most generated programs are pointer arithmetic (`<` and `>`).
 
+Since brainfuck has 8-bit cells, operations will silently overflow. This is not a bug.
+
 # Changelog
 
 ## v0.1
@@ -228,6 +230,5 @@ Statements copy their operands to the first free cells (those in the second half
 
 # Known Issues
 - Defining a variable inside an if statement(?) or a while loop messes up the internal pointer, which can completely mess up brainfuck logic.  
-- Programs are limited to brainfuck's 8-bit cell size. Operations will silently overflow.
 
 
